@@ -1,0 +1,52 @@
+//bunch of server names
+var servers = ['foodnstuff', 'sigma-cosmetics', 'joesguns', 'nectar-net', 'hong-fang-tea', 'harakiri-sushi', 'neo-net', 'CSEC', 'zer0', 'max-hardware', 'iron-gym', 'phantasy', 'silver-helix', 'omega-net', 'avmnite-02h', 'crush-fitness', 'johnson-ortho', 'the-hub', 'I.I.I.I', 'comptek', 'rothman-uni', 'netlink', 'catalyst', 'summit-uni', 'syscore', 'zb-institute'];
+var host = "home";
+var i = 0;
+var cost = getScriptRam( "early-hack-template.script" );
+//var cost2 = getScriptRam( "weaken.script" );
+//var threads2 = 0;
+var threads = 0;
+while(i < servers.length) {
+    var ram = getServerRam( servers[i] );
+    
+    if (getHackingLevel() >= getServerRequiredHackingLevel(servers[i])){
+        tprint('----------------------');
+        tprint('Connecting to: ' + (servers[i]));
+        tprint(ram[0] + 'GB');
+        //Open ports; gain root
+        if (hasRootAccess(servers[i]) === false){
+            if (fileExists('brutessh.exe') === true)
+                brutessh(servers[i]);
+            if (fileExists('ftpcrack.exe') === true)
+                ftpcrack(servers[i]);
+            if (fileExists('relaysmtp.exe') === true)
+                relaysmtp(servers[i]);
+            if (fileExists('httpwork.exe') === true)
+                httpworm(servers[i]);
+            if (fileExists('sqlinject.exe') === true)
+                sqlinject(servers[i]);
+            nuke(servers[i]);
+        }
+        if (hasRootAccess(servers[i]) === true){
+            tprint('Gained Root Access!');
+            //transfer scripts 
+            killall(servers[i]);
+            sleep(6000);
+            scp('early-hack-template.script', servers[i]);
+            //scp('weaken.script', servers[i]);
+            tprint('Scripts transfered.');
+            // figure out how many threads we can run of our script
+            ram = getServerRam( servers[i] );
+            threads = Math.floor( ( ram[0] - ram[1] ) / cost );
+            //threads2 = Math.floor( ((ram[0] - ram[1]) - (threads * cost)) / cost2);
+            //Hax if possible based on ram
+            exec('early-hack-template.script', servers[i], threads, 'the-hub');
+            //exec('weaken.script', host, threads2, 'phantasy');
+            if (isRunning('early-hack-template.script', servers[i], 'the-hub')){
+                tprint("here2");
+                tprint('Success!' + threads + ' threads running.');
+            }
+            i++;
+        }
+    }
+}
