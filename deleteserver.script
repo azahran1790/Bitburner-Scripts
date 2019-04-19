@@ -1,0 +1,3 @@
+deleteServer('serv')
+deleteServer('pserv-4')
+deleteServer('pserv-0-0')
