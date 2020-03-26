@@ -1,0 +1,4 @@
+s = getHostname();
+while (true) {
+    hack(s);
+}
